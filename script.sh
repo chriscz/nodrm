@@ -53,16 +53,31 @@ install () {
   run wine /mnt/adeinstaller.exe
 }
 
+adobe_digital_editions () {
+  run wine "/home/wineuser/.wine/drive_c/Program Files (x86)/Adobe/Adobe Digital Editions 2.0/DigitalEditions.exe"
+}
+
+extract_ade_key () {
+  run wine python "/mnt/dedrm/DeDRM_tools-10.0.3/DeDRM_plugin/adobekey.py" 'Z:\mnt\adobekey_1.der'
+}
+
+extract_ade_library () {
+  # Copy out any files from your library
+  run rm -rf '/mnt/ade_library'
+  run cp -r '/home/wineuser/My Digital Editions' '/mnt/ade_library'
+}
+
+# Debug shell
+# shell; exit 1
+
 prepare
 install
 
-# Boot up ADE
+# Boot up ADE. You should
 # 1. Authorize your computer
 # 2. Add in any of your `.acsm` files
-run wine "/home/wineuser/.wine/drive_c/Program Files (x86)/Adobe/Adobe Digital Editions 2.0/DigitalEditions.exe"
+# 3. Close the program when you are done
+adobe_digital_editions
 
-# Extract encryption key
-run wine python "/mnt/dedrm/DeDRM_tools-10.0.3/DeDRM_plugin/adobekey.py" 'Z:\mnt\adobekey_1.der'
-
-# Debug shell
-# shell
+extract_ade_key
+extract_ade_library
