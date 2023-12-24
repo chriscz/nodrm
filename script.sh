@@ -42,18 +42,27 @@ shell () {
   run bash
 }
 
-# prepare
-chmod a+w .
+install () {
+  # Allow Docker to write to this directory
+  chmod a+w .
 
-run wineboot
-run winetricks -q corefonts dotnet35sp1
-run wine /mnt/python-installer.exe /passive InstallAllUsers=1 PrependPath=1
-run wine python -m pip install pycryptodome
-run wine /mnt/adeinstaller.exe
+  run wineboot
+  run winetricks -q corefonts dotnet35sp1
+  run wine /mnt/python-installer.exe /passive InstallAllUsers=1 PrependPath=1
+  run wine python -m pip install pycryptodome apsw lxml
+  run wine /mnt/adeinstaller.exe
+}
+
+prepare
+install
 
 # Boot up ADE
+# 1. Authorize your computer
+# 2. Add in any of your `.acsm` files
 run wine "/home/wineuser/.wine/drive_c/Program Files (x86)/Adobe/Adobe Digital Editions 2.0/DigitalEditions.exe"
 
 # Extract encryption key
 run wine python "/mnt/dedrm/DeDRM_tools-10.0.3/DeDRM_plugin/adobekey.py" 'Z:\mnt\adobekey_1.der'
+
+# Debug shell
 # shell
